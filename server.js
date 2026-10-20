@@ -1,29 +1,76 @@
-// Local server (Node 18+): npm start  ->  http://localhost:3000
-import http from "http";
-import fs from "fs";
+// Local server (Node 18+): npm start -> http://localhost:3000
+import http from "node:http";
+import fs from "node:fs";
 import chat from "./api/chat.js";
 
-try {
-  for (const line of fs.readFileSync(".env", "utf8").split("\n")) {
-    const m = line.match(/^\s*([A-Z_]+)\s*=\s*(.*)$/);
-    if (m) process.env[m[1]] = m[2].trim();
+if (fs.existsSync(".env")) {
+  for (const line of fs.readFileSync(".env", "utf8").split(/\r?\n/)) {
+    const match = line.match(/^\s*([A-Z_]+)\s*=\s*(.*)\s*$/);
+    if (match && !match[1].startsWith("#")) {
+      process.env[match[1]] = match[2].replace(/^(['"])(.*)\1$/, "$2");
+    }
   }
-} catch {}
+}
 
-http.createServer((req, res) => {
-  if (req.url === "/api/chat") {
+const sendJson = (res, statusCode, body) => {
+  res.writeHead(statusCode, { "content-type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(body));
+};
+
+export const server = http.createServer(async (req, res) => {
+  const pathname = new URL(req.url, `http://${req.headers.host || "localhost"}`).pathname;
+
+  if (pathname === "/api/chat") {
+    if (req.method !== "POST") {
+      res.setHeader("allow", "POST");
+      return sendJson(res, 405, { error: "POST only" });
+    }
+
     let raw = "";
-    req.on("data", (c) => (raw += c));
-    req.on("end", () => {
-      try { req.body = JSON.parse(raw || "{}"); } catch { req.body = {}; }
-      const out = {
-        status(c) { res.statusCode = c; return out; },
-        json(o) { res.setHeader("content-type", "application/json"); res.end(JSON.stringify(o)); },
-      };
-      chat(req, out);
-    });
-  } else {
-    res.setHeader("content-type", "text/html; charset=utf-8");
-    res.end(fs.readFileSync("index.html"));
+    for await (const chunk of req) {
+      raw += chunk;
+      if (raw.length > 35000) {
+        return sendJson(res, 413, { error: "Request body is too large." });
+      }
+    }
+
+    try {
+      req.body = JSON.parse(raw || "{}");
+    } catch {
+      return sendJson(res, 400, { error: "Request body must be valid JSON." });
+    }
+
+    const response = {
+      status(statusCode) {
+        res.statusCode = statusCode;
+        return this;
+      },
+      json(body) {
+        res.setHeader("content-type", "application/json; charset=utf-8");
+        res.end(JSON.stringify(body));
+      },
+    };
+
+    try {
+      await chat(req, response);
+    } catch (error) {
+      console.error("Local chat API failed:", error);
+      if (!res.headersSent) {
+        sendJson(res, 500, { error: "The local chat API failed. Check the server console." });
+      }
+    }
+    return;
   }
-}).listen(process.env.PORT || 3000, () => console.log("Open http://localhost:" + (process.env.PORT || 3000)));
+
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    res.setHeader("allow", "GET, HEAD");
+    return sendJson(res, 405, { error: "Only GET and HEAD are supported for this path." });
+  }
+
+  res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+  if (req.method === "HEAD") return res.end();
+  res.end(fs.readFileSync("index.html"));
+});
+
+const port = Number(process.env.PORT || 3000);
+server.listen(port, () => console.log(`Aria is running at http://localhost:${server.address().port}`));
