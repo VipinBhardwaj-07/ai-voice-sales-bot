@@ -7,7 +7,7 @@ import chat from "./api/chat.js";
 const projectDir = fileURLToPath(new URL(".", import.meta.url));
 const envPath = fileURLToPath(new URL(".env", import.meta.url));
 if (fs.existsSync(envPath)) {
-  for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
+  for (const line of fs.readFileSync(envPath, "utf8").replace(/^\uFEFF/, "").split(/\r?\n/)) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith("#")) continue;
 

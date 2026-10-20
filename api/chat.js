@@ -7,13 +7,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Prompt must be a non-empty string of at most 30000 characters." });
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY?.trim();
   if (!apiKey) {
     return res.status(500).json({
       error: "GROQ_API_KEY is missing. Locally, add it to .env and restart npm start. On Vercel, add it in Project Settings > Environment Variables and redeploy.",
     });
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20000);
   let response;
   try {
     response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -24,13 +26,19 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: process.env.MODEL || "openai/gpt-oss-120b",
-        max_tokens: 700,
+        max_tokens: 400,
+        response_format: { type: "json_object" },
         messages: [{ role: "user", content: prompt }],
       }),
+      signal: controller.signal,
     });
-
-  } catch {
+  } catch (error) {
+    if (error.name === "AbortError") {
+      return res.status(504).json({ error: "Groq took too long to respond. Please try again." });
+    }
     return res.status(502).json({ error: "Could not reach Groq. Check the server's network connection and try again." });
+  } finally {
+    clearTimeout(timeout);
   }
 
   let result;
