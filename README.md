@@ -1,39 +1,107 @@
-# AI Voice Sales Bot (Aria)
+# AI Voice Sales Bot
 
-A working AI voice bot that sells any SaaS product through a live voice conversation in **English or Hindi**.
+Aria is a browser-based AI sales assistant for live product conversations. It can speak and listen in English or Hindi, send the conversation to Claude for responses and sales insights, and save call records in the browser.
 
-## Requirements checklist (Sankar Group assignment)
-| # | Requirement | Where |
-|---|-------------|-------|
-| 1 | Voice conversation (speaks, listens, answers, converts) | Browser speech recognition + speech synthesis, AI replies via `/api/chat` |
-| 2 | Language | English and Hindi (dropdown) |
-| 3 | Live chat screen | "Live Transcript" panel, updates in real time |
-| 4 | Start / End Call, duration, status | Start Call and End Call buttons, timer, status pill |
-| 5 | Call recording with consent | Consent checkbox required; recording saved and playable after the call |
-| 6 | AI summary | Summary, requirements, objections, next steps, lead score |
-| 7 | Sales status | Converted, Interested, Follow-up Required, Not Interested, Demo Requested, No Response |
-| 8 | Call history | Call History page: recording, summary, full transcript, status |
+## Features
 
-Extras: live buy-intent gauge, sentiment, stage tracker, Sales Radar, analytics, CSV export, mute/hold/speaker, microphone check, product setup for any SaaS.
+- Live voice conversations with browser speech recognition and speech synthesis
+- English and Hindi language options, plus text input when speech recognition is unavailable
+- Live transcript, call timer, sentiment, buying intent, and sales-stage indicators
+- Configurable product name, pitch, and price
+- Optional call recording and AI-generated call summaries
+- Call history with recordings, transcripts, summaries, and sales outcomes
+- Sales analytics and CSV export
+- Call controls including mute, hold, and speaker options
+
+## Requirements
+
+- Node.js 18 or later
+- An Anthropic API key for AI replies and summaries
+- A current version of Chrome or Edge for the best speech-recognition support
+- Microphone access; browsers generally require HTTPS for microphone access on deployed sites (localhost is permitted)
 
 ## Run locally
-1. Install Node 18+.
-2. Copy `.env.example` to `.env` and put your Anthropic API key in it.
-3. `npm start` and open http://localhost:3000 in **Chrome or Edge**.
 
-## Deploy for the "working website link" (free, Vercel)
-1. Push this folder to a GitHub repo, import it in Vercel.
-2. In Project Settings > Environment Variables add `ANTHROPIC_API_KEY`.
-3. Deploy. The site is served over HTTPS, which the microphone needs.
+1. Clone the repository and open its directory:
+
+   ```bash
+   git clone https://github.com/VipinBhardwaj-07/ai-voice-sales-bot.git
+   cd ai-voice-sales-bot
+   ```
+
+2. Create a local environment file from the example:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   On Windows PowerShell, use `Copy-Item .env.example .env` instead.
+
+3. Edit `.env` and set your key:
+
+   ```dotenv
+   ANTHROPIC_API_KEY=your_anthropic_api_key
+   MODEL=claude-haiku-5-5
+   ```
+
+   Keep `.env` private; it is excluded from Git.
+
+4. Start the application:
+
+   ```bash
+   npm start
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in Chrome or Edge.
+
+No additional npm packages are required.
+
+## Deploy to Vercel
+
+1. Import this GitHub repository into Vercel.
+2. Add `ANTHROPIC_API_KEY` to the project's environment variables. Optionally set `MODEL` to choose a different Anthropic model.
+3. Deploy the project and open the generated HTTPS URL.
+4. Allow microphone access in the browser before starting a call.
+
+The `api/chat.js` serverless function calls Anthropic without exposing the API key to the browser.
+
+## Using Aria
+
+1. Open **Product Setup** to customize the product name, pitch, and price.
+2. Choose English or Hindi and enable microphone access. If speech recognition is unavailable, use the text input.
+3. Tick the recording and transcription consent checkbox before starting a call.
+4. Start the call and use the live transcript and sales indicators to follow the conversation.
+5. End the call to view its summary and sales outcome, then find saved calls under **Call History**.
+
+Auto recording and AI summaries can be changed in the call controls. Calls can still be recorded only when the consent checkbox is selected.
 
 ## How it works
-1. The customer ticks consent and presses Start Call. The browser records the microphone (MediaRecorder).
-2. Aria greets in the chosen language (speech synthesis). Then speech recognition turns the customer's words into text.
-3. Each turn, the transcript goes to `/api/chat`, which asks Claude for the next sales line plus live insights (sentiment, buy intent, stage, key point).
-4. On End Call, Claude produces the summary, requirements, objections, next steps, lead score and one of the six statuses.
-5. The call (audio, transcript, summary, status) is saved in the browser's IndexedDB and shown in Call History.
 
-## Notes
-- Use headphones so the bot voice does not echo into the recording.
-- Call history is stored per browser. For shared history, add a database.
-- Hindi speech voices depend on what is installed on the device.
+- `index.html` contains the single-page interface, browser voice features, call controls, and local call history.
+- `server.js` serves the interface and exposes `/api/chat` for local development.
+- `api/chat.js` validates requests and sends prompts to the Anthropic Messages API. The API key is read from the server environment.
+- Speech recognition, speech synthesis, and microphone recording use browser APIs.
+- Call recordings and call history are stored in the browser using IndexedDB. Product settings are stored in local storage.
+
+## Privacy and limitations
+
+- Call history and recordings are stored in the current browser on the current device; they are not synchronized to a central database.
+- Conversation text is sent to the configured Anthropic API to generate replies and summaries. Do not use real customer information unless your organization's policies and applicable consent requirements permit it.
+- Recording requires the in-app consent checkbox. Follow applicable laws and obtain any additional consent required in your location.
+- Speech-recognition availability and Hindi voice quality depend on the browser, operating system, and installed voices. Use the text input if speech recognition is unavailable.
+- Use headphones to reduce the chance that Aria's voice will be picked up by the microphone.
+
+## Project files
+
+```text
+.
+├── api/
+│   └── chat.js
+├── .env.example
+├── .gitignore
+├── index.html
+├── package.json
+├── README.md
+├── server.js
+└── VIDEO_SCRIPT.md
+```
