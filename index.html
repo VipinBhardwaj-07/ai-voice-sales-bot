@@ -196,7 +196,7 @@ async function botTurn(){
   const tr=tx({msgs})||"(call just connected, greet the customer and ask what they do)";let j;
   try{const r=await sample(SYS()+`\n\nConversation so far:\n${tr}\n\nReply with ONLY JSON, no markdown: {"reply":"Aria's next spoken line in ${langName}","sentiment":"Positive|Neutral|Negative","interest":0-100 (customer buy intent now),"stage":"Discovery|Pitch|Objection|Closing","tag":"short English key point about a customer need, signal or objection, or empty"}`,{cache:false,modelTier:"quick"});
     j=JSON.parse(r.text.match(/\{[\s\S]*\}/)[0]);if(!j.reply)throw 0}
-  catch(e){j={reply:langName=="English"?"Sorry, I had a connection issue. Could you repeat that?":"क्षमा करें, कृपया दोहराएँ।",sentiment:"Neutral",interest:interest,stage:STEPS[stepIdx]=="Greeting"?"Discovery":STEPS[stepIdx],tag:""}}
+  catch(e){const detail=e instanceof Error?e.message:String(e);add("bot","AI connection failed: "+detail);j={reply:langName=="English"?"Sorry, I had a connection issue. Could you repeat that?":"क्षमा करें, कृपया दोहराएँ।",sentiment:"Neutral",interest:interest,stage:STEPS[stepIdx]=="Greeting"?"Discovery":STEPS[stepIdx],tag:""}}
   j.interest=Math.max(0,Math.min(100,Math.round(+j.interest||0)));if(!STEPS.includes(j.stage))j.stage="Discovery";if(!["Positive","Neutral","Negative"].includes(j.sentiment))j.sentiment="Neutral";
   if(!active){busy=false;return}
   msgs.push({role:"bot",text:j.reply,t:Date.now()-t0,interest:j.interest,sentiment:j.sentiment});add("bot",j.reply);$("bub").textContent=j.reply;insight(j);
@@ -225,7 +225,7 @@ $("bStart").onclick=()=>{if(!active)startCall()};$("bEnd").onclick=()=>{if(activ
 
 async function startCall(){
   if(!$("cons").checked){alert("Please tick the recording consent box to start the call.");return}
-  sample=sample||(async prompt=>{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});if(!r.ok)throw new Error("AI request failed");return await r.json()});
+  sample=sample||(async prompt=>{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});const data=await r.json().catch(()=>null);if(!r.ok)throw new Error(data?.error||"AI server returned HTTP "+r.status);if(!data||typeof data.text!=="string")throw new Error("AI server returned an invalid response.");return data});
   [lang,langName]=$("lang").value.split("|");msgs=[];chunks=[];notes=[];stepIdx=0;stepT=[0];interest=0;muted=held=false;$("chat").innerHTML="";$("result").classList.add("hide");$("recbox").textContent="Recording in progress…";$("bme").classList.add("hide");$("bub").innerHTML="";$("kp").innerHTML="";$("notes").innerHTML="";
   insight({interest:0,sentiment:"Neutral",stage:"",tag:""});stepIdx=0;steps();
   try{await getMic();micUI(true,"Microphone is on and listening.");

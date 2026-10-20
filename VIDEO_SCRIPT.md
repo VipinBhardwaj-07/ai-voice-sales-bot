@@ -5,4 +5,4 @@
 3. (0:30) Aria speaks. Reply by voice, ask about price, then raise an objection ("it is expensive"). Point at the live transcript, buy-intent gauge, sentiment and stage tracker.
 4. (1:10) Press End Call. Show the AI summary, requirements, objections, next steps and the auto-assigned status.
 5. (1:30) Play the recording. Open Call History: recording, summary, full conversation, status. Show Sales Analytics.
-6. (1:50) "Voice uses the browser, replies come from Claude through a small serverless function, calls are saved locally." End.
+6. (1:50) "Voice uses the browser, replies come from Groq through a small serverless function, calls are saved locally." End.
