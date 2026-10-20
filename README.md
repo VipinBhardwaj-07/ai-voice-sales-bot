@@ -61,11 +61,14 @@ No additional npm packages are required.
 ## Deploy to Vercel
 
 1. Import this GitHub repository into Vercel. GitHub Pages only hosts static files and cannot run the `/api/chat` function.
-2. Add `GROQ_API_KEY` to the Vercel project's environment variables. Optionally set `MODEL` to choose a supported Groq model.
-3. Deploy the project and open the generated HTTPS URL.
-4. Allow microphone access in the browser before starting a call.
+2. In **Project Settings → Environment Variables**, add `GROQ_API_KEY` with your Groq API key. Make it available to **Production** (and Preview/Development if you use those environments). Optionally set `MODEL` to choose a supported Groq model.
+3. Redeploy the project after saving the environment variable; existing deployments do not receive newly added environment variables.
+4. Open the generated HTTPS URL.
+5. Allow microphone access in the browser before starting a call.
 
 The `api/chat.js` serverless function calls Groq without exposing the API key to the browser. After changing an environment variable, redeploy the Vercel project for the new value to take effect.
+
+GitHub Pages and VS Code Live Server only serve static files and cannot run this API function. Use the Vercel deployment URL for the hosted app.
 
 ## Using Aria
 

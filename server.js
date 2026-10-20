@@ -73,4 +73,9 @@ export const server = http.createServer(async (req, res) => {
 });
 
 const port = Number(process.env.PORT || 3000);
-server.listen(port, () => console.log(`Aria is running at http://localhost:${server.address().port}`));
+server.listen(port, () => {
+  console.log(`Aria is running at http://localhost:${server.address().port}`);
+  if (!process.env.GROQ_API_KEY) {
+    console.warn("GROQ_API_KEY is missing. Copy .env.example to .env, add your key, then restart npm start.");
+  }
+});
