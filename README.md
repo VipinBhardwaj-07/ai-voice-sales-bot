@@ -54,7 +54,7 @@ Aria is a browser-based AI sales assistant for live product conversations. It ca
 
 5. Open [http://localhost:3000](http://localhost:3000) in Chrome or Edge.
 
-Use this Node server rather than VS Code **Live Server** or another static-only server. Static servers can display the page but cannot handle Aria's `/api/chat` requests.
+Use this Node server rather than VS Code **Live Server** or another static-only server. Static servers can display the page but cannot handle Aria's `/api/chat` requests. The local server reads `.env` from the project folder even if Node is started from a different working directory; check its startup message for `GROQ_API_KEY is configured.`
 
 No additional npm packages are required.
 

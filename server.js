@@ -1,13 +1,19 @@
 // Local server (Node 18+): npm start -> http://localhost:3000
 import http from "node:http";
 import fs from "node:fs";
+import { fileURLToPath } from "node:url";
 import chat from "./api/chat.js";
 
-if (fs.existsSync(".env")) {
-  for (const line of fs.readFileSync(".env", "utf8").split(/\r?\n/)) {
-    const match = line.match(/^\s*([A-Z_]+)\s*=\s*(.*)\s*$/);
-    if (match && !match[1].startsWith("#")) {
-      process.env[match[1]] = match[2].replace(/^(['"])(.*)\1$/, "$2");
+const projectDir = fileURLToPath(new URL(".", import.meta.url));
+const envPath = fileURLToPath(new URL(".env", import.meta.url));
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+
+    const match = trimmed.replace(/^export\s+/, "").match(/^([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$/);
+    if (match && !process.env[match[1]]) {
+      process.env[match[1]] = match[2].replace(/^(['"])(.*)\1$/, "$2").trim();
     }
   }
 }
@@ -69,13 +75,15 @@ export const server = http.createServer(async (req, res) => {
 
   res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
   if (req.method === "HEAD") return res.end();
-  res.end(fs.readFileSync("index.html"));
+  res.end(fs.readFileSync(`${projectDir}index.html`));
 });
 
 const port = Number(process.env.PORT || 3000);
 server.listen(port, () => {
   console.log(`Aria is running at http://localhost:${server.address().port}`);
-  if (!process.env.GROQ_API_KEY) {
+  if (process.env.GROQ_API_KEY) {
+    console.log("GROQ_API_KEY is configured.");
+  } else {
     console.warn("GROQ_API_KEY is missing. Copy .env.example to .env, add your key, then restart npm start.");
   }
 });
