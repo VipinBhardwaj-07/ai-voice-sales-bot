@@ -41,7 +41,7 @@ Aria is a browser-based AI sales assistant for live product conversations. It ca
 
    ```dotenv
    GROQ_API_KEY=your_groq_api_key
-   MODEL=llama-3.3-70b-versatile
+   MODEL=openai/gpt-oss-120b
    ```
 
    Keep `.env` private; it is excluded from Git.
@@ -61,7 +61,7 @@ No additional npm packages are required.
 ## Deploy to Vercel
 
 1. Import this GitHub repository into Vercel. GitHub Pages only hosts static files and cannot run the `/api/chat` function.
-2. In **Project Settings → Environment Variables**, add `GROQ_API_KEY` with your Groq API key. Make it available to **Production** (and Preview/Development if you use those environments). Optionally set `MODEL` to choose a supported Groq model.
+2. In **Project Settings → Environment Variables**, add `GROQ_API_KEY` with your Groq API key. Make it available to **Production** (and Preview/Development if you use those environments). Set `MODEL` to `openai/gpt-oss-120b`, or choose another model available to your Groq account.
 3. Redeploy the project after saving the environment variable; existing deployments do not receive newly added environment variables.
 4. Open the generated HTTPS URL.
 5. Allow microphone access in the browser before starting a call.

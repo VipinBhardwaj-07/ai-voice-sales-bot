@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.MODEL || "llama-3.3-70b-versatile",
+        model: process.env.MODEL || "openai/gpt-oss-120b",
         max_tokens: 700,
         messages: [{ role: "user", content: prompt }],
       }),
