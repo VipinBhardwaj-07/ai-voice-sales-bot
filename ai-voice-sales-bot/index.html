@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vexora – AI Voice Sales Bot</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="app">
+<aside class="side"><div class="logo"><span class="bars"><i></i><i></i><i></i><i></i></span><div><b>Vexora</b><small>Talk • Engage • Sell</small></div></div>
+<nav><button class="nav on" data-v="call">📞 Live Call</button><button class="nav" data-v="hist">🕘 Call History</button><button class="nav" data-v="stats">📊 Analytics</button><button class="nav" id="profBtn">👤 Profile</button></nav>
+<div class="promo"><div class="bot">🤖</div><h3>AI That Sells For You</h3><p>Hindi &amp; English voice conversations that convert.</p></div></aside>
+<main>
+<header><div class="pill"><span class="dot" id="onl"></span> Online</div><div class="me" id="meBtn"><span class="av">V</span><div><b>Vipin Bhardwaj</b><small>Admin</small></div></div></header>
+
+<section id="v-call" class="view on">
+<div class="grid">
+<div class="card center">
+ <div class="row"><div><small class="g">Live Call</small><h2>Product Sales Call</h2></div><div class="row"><span id="timer" class="timer">00:00:00</span><span id="status" class="badge">Idle</span></div></div>
+ <div class="orbwrap"><div class="orb" id="orb"><div class="wave" id="wave"></div></div><h3>Vexora – AI Voice Assistant</h3><div class="row"><label>Language <select id="lang"><option value="en-IN">English</option><option value="hi-IN">हिन्दी (Hindi)</option></select></label></div></div>
+ <div class="chat" id="chat"><p class="hint">Press <b>Start Call</b> to talk with Vexora. Live transcript appears here.</p></div>
+ <label class="consent"><input type="checkbox" id="consent"> I consent to this call being recorded and transcribed.</label>
+ <div class="ctrl"><button id="mic" class="cb">🎙️<small>Mute</small></button><button id="start" class="cb go">📞<small>Start Call</small></button><button id="end" class="cb stop" disabled>⏹<small>End Call</small></button></div>
+ <form id="tf" class="tf"><input id="ti" placeholder="Or type your reply (fallback if mic unavailable)…" autocomplete="off"><button>Send</button></form>
+</div>
+<div class="col">
+ <div class="card"><h4>🎧 Call Recording</h4><div class="wavebar"></div><audio id="player" controls></audio></div>
+ <div class="card"><h4>✨ AI Call Summary</h4><div id="sum" class="muted">Summary appears after the call ends.</div></div>
+ <div class="card"><h4>Sales Status</h4><span id="sstat" class="badge big">—</span></div>
+</div></div></section>
+
+<section id="v-hist" class="view"><div class="card"><h2>Call History</h2><div id="hlist"></div></div><div class="card" id="hdet" hidden></div></section>
+<section id="v-stats" class="view"><div class="card"><h2>Sales Analytics</h2><div id="stats" class="kpis"></div></div></section>
+</main></div>
+<div class="modal" id="prof" hidden><div class="card pcard"><button class="x" id="px">✕</button><div class="av big">V</div><h2>Vipin Bhardwaj</h2><p class="muted">Admin • B.Tech CSE (AI), Sanskaram University</p><div id="pstats" class="kpis"></div><p class="muted">GitHub: <a href="https://github.com/VipinBhardwaj-07" target="_blank">VipinBhardwaj-07</a></p><button id="clear" class="danger">Clear all call data</button></div></div>
+<script src="app.js"></script></body></html>
