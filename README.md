@@ -32,19 +32,19 @@ Aria is a browser-based AI sales assistant for live product conversations. It ca
 2. Create a local environment file from the example:
 
    ```bash
-   cp .env.example .env
+   cp .env.example .env.local
    ```
 
-   On Windows PowerShell, use `Copy-Item .env.example .env` instead.
+   On Windows PowerShell, use `Copy-Item .env.example .env.local` instead.
 
-3. Edit `.env` and set your key:
+3. Edit `.env.local` and set your key:
 
    ```dotenv
    GROQ_API_KEY=your_groq_api_key
    MODEL=openai/gpt-oss-120b
    ```
 
-   Keep `.env` private; it is excluded from Git.
+   Keep `.env.local` private; it is excluded from Git. The server reads `.env.local` before `.env`.
 
 4. Start the application:
 
@@ -54,7 +54,7 @@ Aria is a browser-based AI sales assistant for live product conversations. It ca
 
 5. Open [http://localhost:3000](http://localhost:3000) in Chrome or Edge.
 
-Use this Node server rather than VS Code **Live Server** or another static-only server. Static servers can display the page but cannot handle Aria's `/api/chat` requests. The local server reads `.env` from the project folder even if Node is started from a different working directory; check its startup message for `GROQ_API_KEY is configured.`
+Use this Node server rather than VS Code **Live Server** or another static-only server. Static servers can display the page but cannot handle Aria's `/api/chat` requests. The local server reads `.env.local` or `.env` from the project folder even if Node is started from a different working directory; check its startup message for `GROQ_API_KEY is configured.`
 
 No additional npm packages are required.
 
