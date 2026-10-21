@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Voice Sales Bot</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🎙%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#070a1c;--side:#0a0e26;--card:rgba(20,26,66,.62);--card2:rgba(255,255,255,.04);--tx:#eaeeff;--mut:#8e9acb;--bd:rgba(110,125,255,.22);--ac:#7c5cff;--ac2:#22d3ee;--grn:#22e3a0;--red:#ff3b5c;--bot:rgba(40,60,190,.5);--me:rgba(255,255,255,.07);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef1fb;--side:#fff;--card:rgba(255,255,255,.85);--card2:rgba(20,30,80,.04);--tx:#141a3a;--mut:#5d6794;--bd:rgba(80,90,200,.2);--bot:rgba(124,92,255,.14);--me:rgba(20,30,80,.06)}}
+:root[data-theme="light"]{--bg:#eef1fb;--side:#fff;--card:rgba(255,255,255,.85);--card2:rgba(20,30,80,.04);--tx:#141a3a;--mut:#5d6794;--bd:rgba(80,90,200,.2);--bot:rgba(124,92,255,.14);--me:rgba(20,30,80,.06)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;color:var(--tx);font:13.5px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(900px 500px at 70% -10%,rgba(124,92,255,.3),transparent),radial-gradient(700px 500px at 0 100%,rgba(34,211,238,.14),transparent),var(--bg);background-attachment:fixed;min-height:100vh}
+.app{display:grid;grid-template-columns:210px minmax(0,1fr);min-height:100vh}
+@media(max-width:860px){.app{grid-template-columns:1fr}.side{flex-direction:row!important;overflow:auto;padding:8px!important}.side .brand span,.side .promo{display:none}}
+.side{background:var(--side);border-right:1px solid var(--bd);padding:16px 12px;display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;gap:9px;align-items:center;margin-bottom:14px}.logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;font-size:18px;box-shadow:0 0 20px rgba(124,92,255,.6)}
+.brand b{font-size:15px;display:block;line-height:1.1}.brand small{color:var(--mut);font-size:10.5px}
+.nav{display:flex;gap:10px;align-items:center;padding:11px 13px;border-radius:12px;border:1px solid transparent;background:none;color:var(--tx);font:inherit;font-weight:600;cursor:pointer;text-align:left;white-space:nowrap}
+.nav.on{background:linear-gradient(90deg,rgba(124,92,255,.5),rgba(34,211,238,.15));border-color:var(--ac);box-shadow:0 0 18px rgba(124,92,255,.35)}
+.promo{margin-top:auto;padding:14px;border-radius:14px;background:linear-gradient(160deg,rgba(124,92,255,.35),transparent);border:1px solid var(--bd);font-size:12px;color:var(--mut)}.promo b{display:block;color:var(--tx);font-size:15px}
+.main{padding:14px;min-width:0}
+.top{display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.top input{flex:1;min-width:160px;max-width:420px;padding:10px 14px;border-radius:12px;border:1px solid var(--bd);background:var(--card2);color:var(--tx);font:inherit}
+.online{padding:5px 12px;border-radius:999px;border:1px solid var(--grn);color:var(--grn);font-weight:700;font-size:12px}
+.user{display:flex;gap:9px;align-items:center;margin-left:auto}.av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;font-weight:800;color:#fff}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);min-width:0}
+.card h3{margin:0 0 10px;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.mut{color:var(--mut)}.hide{display:none!important}
+.live{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,.9fr);gap:12px}
+@media(max-width:1180px){.live{grid-template-columns:1fr 1fr}}@media(max-width:760px){.live{grid-template-columns:1fr}}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.pill{display:inline-block;padding:3px 11px;border-radius:999px;font-size:11.5px;font-weight:700;color:#fff;background:#475174}
+.ptag{border:1px solid var(--grn);color:var(--grn);background:rgba(34,227,160,.1)}
+.callhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}.callhead h2{margin:0;font-size:20px}
+.timer{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.stagebox{display:grid;grid-template-columns:170px minmax(0,1fr);gap:12px;margin-top:12px}@media(max-width:620px){.stagebox{grid-template-columns:1fr}}
+.steps{display:flex;flex-direction:column;gap:6px}.st{display:flex;gap:9px;align-items:center;padding:8px 10px;border-radius:11px;background:var(--card2);font-size:12px}
+.st i{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--mut);display:grid;place-items:center;font-style:normal;font-size:11px;flex:none}
+.st.done i{background:var(--grn);border-color:var(--grn);color:#042}.st.now{background:rgba(124,92,255,.35);border:1px solid var(--ac)}.st.now i{border-color:var(--ac2);color:var(--ac2)}
+.st small{display:block;color:var(--mut);font-size:10.5px}
+.center{text-align:center}
+.orbrow{display:flex;align-items:center;justify-content:center;gap:6px}
+canvas{width:100%;height:80px;display:block}
+.orb{flex:none;width:112px;height:112px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#0a1250 55%,transparent 56%),conic-gradient(from 0deg,var(--ac2),var(--ac),#e04bff,var(--ac2));box-shadow:0 0 50px rgba(124,92,255,.7),inset 0 0 25px rgba(34,211,238,.4);font-size:30px}
+[data-s=speak] .orb{animation:sp 1s infinite}[data-s=listen] .orb{animation:li 2s infinite}[data-s=think] .orb{animation:rot 1.2s linear infinite}[data-s=idle] .orb{filter:saturate(.4);opacity:.75}
+@keyframes sp{50%{transform:scale(1.1);box-shadow:0 0 80px rgba(124,92,255,1)}}@keyframes li{50%{box-shadow:0 0 70px rgba(34,211,238,.8)}}@keyframes rot{to{transform:rotate(360deg)}}
+.bub{margin:10px auto 6px;max-width:520px;padding:12px 15px;border-radius:16px;background:var(--bot);border:1px solid var(--bd);text-align:left;min-height:58px}
+.bub.me{background:var(--me);margin-left:auto;max-width:78%;min-height:0;font-size:12.5px}
+.dock{display:flex;justify-content:center;align-items:flex-end;gap:18px;margin-top:12px;padding:12px;border-radius:22px;background:var(--card2);border:1px solid var(--bd)}
+.d{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--mut);cursor:pointer;background:none;border:0;font-family:inherit}
+.d b{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card2);border:1px solid var(--bd);font-size:18px;color:var(--tx)}.d.on b{background:var(--ac);border-color:var(--ac)}
+.d.big b{width:62px;height:62px;font-size:24px;border:0;color:#fff;background:linear-gradient(135deg,#ff3b5c,#ff7a45);box-shadow:0 0 28px rgba(255,59,92,.6)}.d.big.start b{background:linear-gradient(135deg,#10c98f,#22e3a0);box-shadow:0 0 28px rgba(34,227,160,.6)}
+.ctl label{display:flex;justify-content:space-between;align-items:center;padding:8px 2px;font-size:12.5px}
+.sw{appearance:none;width:38px;height:21px;border-radius:99px;background:#475174;position:relative;cursor:pointer;flex:none}.sw::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.2s}.sw:checked{background:var(--grn)}.sw:checked::after{left:19px}
+select,input[type=text]{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:10px;background:var(--card2);color:var(--tx);font:inherit}
+label.l{display:block;font-size:11.5px;color:var(--mut);margin:8px 0 3px}
+.chat{display:flex;flex-direction:column;gap:9px;overflow-y:auto;max-height:430px}
+.msg{padding:9px 12px;border-radius:13px;background:var(--me);border:1px solid var(--bd);white-space:pre-wrap;word-wrap:break-word;animation:in .25s}.msg.bot{background:var(--bot)}.int{opacity:.55}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.msg small{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:2px}
+.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.row input{flex:1;min-width:110px}.row select{width:auto}
+.btn{border:0;border-radius:11px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--ac),#5a45e8)}.btn.g{background:var(--card2);color:var(--tx);border:1px solid var(--bd)}
+.ins{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:700px){.ins{grid-template-columns:repeat(2,1fr)}}
+.tile{display:flex;gap:10px;align-items:center;padding:12px;border-radius:13px;background:var(--card2);border:1px solid var(--bd)}.tile small{display:block;color:var(--mut);font-size:11px}.tile b{font-size:15px}
+.ring{--v:0;width:46px;height:46px;border-radius:50%;flex:none;background:conic-gradient(var(--grn) calc(var(--v)*1%),rgba(255,255,255,.1) 0);display:grid;place-items:center}.ring::after{content:"";width:34px;height:34px;border-radius:50%;background:var(--side)}
+.bar{height:6px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--grn));transition:.5s}
+.kp{margin:0;padding:0;list-style:none;font-size:12px}.kp li{padding:3px 0}.kp li::before{content:"✔ ";color:var(--grn)}
+audio{width:100%;margin-top:8px;height:34px}
+.s-Converted{background:#16a34a}.s-Interested{background:#2563eb}.s-Follow{background:#d97706}.s-Not{background:#6b7280}.s-Demo{background:#7c3aed}.s-No{background:#64748b}
+.mini{display:flex;gap:9px;align-items:center;padding:7px 0;border-top:1px solid var(--bd);font-size:12px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}.stats b{font-size:26px;display:block}
+.dist{display:flex;height:12px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.1);margin:8px 0}
+.hgrid{display:grid;grid-template-columns:360px minmax(0,1fr);gap:12px}@media(max-width:900px){.hgrid{grid-template-columns:1fr}}
+.list{display:flex;flex-direction:column;gap:8px;max-height:620px;overflow:auto;margin-top:10px}.item{padding:10px 12px;border-radius:13px;border:1px solid var(--bd);background:var(--card2);cursor:pointer}.item.on{border-color:var(--ac2)}.item p{margin:4px 0 0;font-size:12px;color:var(--mut)}
+ul.pl{margin:3px 0 9px;padding-left:18px}
+#micl{transition:width .08s}
+</style></head>
+<body><div class="app">
+<aside class="side">
+ <div class="brand"><div class="logo">🎙</div><span><b>AI Voice Sales Bot</b><small>Talk · Engage · Sell</small></span></div>
+ <button class="nav on" data-v="Live">📞 Live Call</button><button class="nav" data-v="Hist">🕘 Call History</button><button class="nav" data-v="An">📊 Sales Analytics</button><button class="nav" data-v="Set">⚙️ Product Setup</button>
+ <div class="promo"><b>AI That Sells For You</b>Smart conversations in Hindi and English, recorded and summarized automatically.</div>
+</aside>
+<div class="main">
+ <div class="top"><input type="text" id="q" placeholder="Search calls, summaries, transcripts…"><span class="online">● Online</span><div class="user"><div class="av">V</div><div><b>Vipin Bhardwaj</b><div class="mut" style="font-size:11px">Admin</div></div></div></div>
+
+ <section id="vLive" class="live" data-s="idle">
+  <div class="col">
+   <div class="card">
+    <div class="callhead"><div><span class="pill ptag" id="live">● Live Call</span><h2 id="ptitle">Product Sales Call</h2><div class="mut" id="sub"></div></div><div style="text-align:right"><div class="timer" id="timer">00:00:00</div><span class="pill" id="pill">Idle</span><div class="row" style="justify-content:flex-end;margin-top:8px"><button class="btn" id="bStart" style="background:linear-gradient(135deg,#10c98f,#22e3a0)">📞 Start Call</button><button class="btn" id="bEnd" style="background:linear-gradient(135deg,#ff3b5c,#ff7a45)" disabled>📵 End Call</button></div></div></div>
+    <div class="stagebox">
+     <div class="steps" id="steps"></div>
+     <div class="center">
+      <div class="orbrow"><canvas id="wl" width="200" height="80"></canvas><div class="orb">🎧</div><canvas id="wr" width="200" height="80"></canvas></div>
+      <b style="font-size:16px">AI Voice Assistant</b><div><span class="pill ptag" id="lchip">Speaking in English</span></div>
+      <div class="bub" id="bub"><span class="mut">Press Start Call to begin. Aria will greet the customer.</span></div>
+      <div class="bub me hide" id="bme"></div>
+     </div>
+    </div>
+    <div class="dock">
+     <button class="d" id="bMute"><b>🎤</b>Mute</button><button class="d on" id="bSpk"><b>🔊</b>Speaker</button>
+     <button class="d big start" id="bGo"><b>📞</b>Start Call</button>
+     <button class="d" id="bHold"><b>⏸</b>Hold</button>
+    </div>
+    <div class="row" style="justify-content:center;align-items:center"><select id="lang" style="max-width:170px"><option value="en-IN|English">English</option><option value="hi-IN|Hindi">हिन्दी (Hindi)</option></select>
+     <label class="mut" style="display:flex;gap:7px;align-items:center;font-size:11.5px;max-width:330px"><input type="checkbox" id="cons">I consent to this call being recorded and transcribed.</label></div>
+    <div class="row" style="justify-content:center;align-items:center"><button class="btn" id="bMic">🎤 Enable Microphone</button><div style="width:120px"><div class="bar"><i id="micl"></i></div></div></div>
+    <div class="mut center" id="micst" style="margin-top:4px">Microphone is off. Click Enable Microphone and allow access.</div>
+    <div class="mut center" id="support" style="margin-top:6px"></div>
+   </div>
+   <div class="card"><h3>Smart Sales Insights <span class="mut">AI is analyzing the conversation in real time</span></h3>
+    <div class="ins">
+     <div class="tile"><div class="ring" id="eng"></div><div><small>Engagement</small><b id="engv">0%</b></div></div>
+     <div class="tile"><span style="font-size:26px">🔥</span><div><small>Interest Level</small><b id="intl">Low</b></div></div>
+     <div class="tile"><span style="font-size:26px">💬</span><div><small>Sentiment</small><b id="sent">Neutral</b></div></div>
+     <div class="tile"><span style="font-size:26px">🚀</span><div><small>Next Action</small><b id="nact">Greet</b></div></div>
+    </div>
+   </div>
+  </div>
+
+  <div class="col">
+   <div class="card"><h3>Live Transcript <span class="pill" id="tl">English</span></h3>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <div class="row"><input type="text" id="typed" placeholder="Type a reply if voice fails" disabled><button class="btn" id="send" disabled>Send</button></div></div>
+   <div class="card ctl"><h3>Call Controls</h3>
+    <label>Auto Record <input type="checkbox" class="sw" id="tRec" checked></label><label>AI Summary <input type="checkbox" class="sw" id="tSum" checked></label>
+    <label>Real-time Transcript <input type="checkbox" class="sw" id="tTr" checked></label><label>Smart Suggestions <input type="checkbox" class="sw" id="tSug" checked></label></div>
+  </div>
+
+  <div class="col">
+   <div class="card"><h3>Call Recording <span class="pill" id="recp">Not recording</span></h3><canvas id="wrec" width="300" height="60"></canvas><div id="recbox" class="mut">The recording appears here after the call.</div></div>
+   <div class="card" id="sumCard"><h3>AI Call Summary <span class="pill ptag" id="sentp">Neutral</span></h3>
+    <ul class="kp" id="kp"><li class="mut" style="list-style:none">Key points appear as the call goes on.</li></ul>
+    <div style="margin-top:10px"><div class="mut" style="font-size:11.5px">Lead quality</div><div class="bar"><i id="lq"></i></div><div class="mut" style="font-size:11.5px;margin-top:6px">Estimated conversion <b id="ec" style="color:var(--tx)">0%</b></div></div>
+    <div id="result" class="hide" style="margin-top:12px"></div></div>
+   <div class="card" id="sugCard"><h3>Sales Radar</h3><div id="notes" class="mut" style="font-size:12px">Signals and objections show here.</div></div>
+   <div class="card"><h3>Call History <a class="mut" style="cursor:pointer" id="viewall">View All →</a></h3><div id="mini"></div></div>
+  </div>
+ </section>
+
+ <section id="vHist" class="hide"></section><section id="vAn" class="hide"></section>
+ <section id="vSet" class="hide"><div class="card" style="max-width:560px"><h3>Product Setup (any SaaS)</h3>
+  <label class="l" for="p_name">Product name</label><input type="text" id="p_name"><label class="l" for="p_pitch">What it is and key features</label><input type="text" id="p_pitch"><label class="l" for="p_price">Pricing and offers</label><input type="text" id="p_price"></div></section>
+</div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let sample=null,active=false,busy=false,speaking=false,rec=null,mr=null,chunks=[],stream=null,msgs=[],t0=0,tick=null,lang="en-IN",langName="English",interimEl=null,an=null,ac=null,sel=null,fS="All",muted=false,held=false,spk=true,stepIdx=0,stepT=[],interest=0,notes=[];
+$("support").textContent=SR?"":"Speech recognition is not supported here. Use Chrome or Edge, or type your replies.";
+const DEF={name:"PulseCRM",pitch:"a SaaS CRM for small teams. Features: contact and deal pipeline, automatic WhatsApp and email follow-ups, AI call notes, reports",price:"Starter ₹499/user/month, Pro ₹999/user/month, 14-day free trial, free demo available"};
+let P={...DEF};try{Object.assign(P,JSON.parse(localStorage.getItem("ariaP")||"{}"))}catch(e){}
+const refP=()=>{$("sub").textContent="Selling "+P.name+" · AI Sales Assistant is speaking with the customer"};refP();
+["name","pitch","price"].forEach(k=>{const e=$("p_"+k);e.value=P[k];e.oninput=()=>{P[k]=e.value;refP();try{localStorage.setItem("ariaP",JSON.stringify(P))}catch(x){}}});
+const STAT=["Converted","Interested","Follow-up Required","Not Interested","Demo Requested","No Response"],STEPS=["Greeting","Discovery","Pitch","Objection","Closing"];
+const cls=s=>"s-"+s.split(/[ -]/)[0],pad=n=>String(n).padStart(2,"0"),fmt=s=>pad(Math.floor(s/60))+":"+pad(s%60);
+const tx=c=>c.msgs.map(m=>(m.role=="bot"?"Aria: ":"Customer: ")+m.text).join("\n");
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const SYS=()=>`You are Aria, a warm, concise, persuasive AI sales agent on a phone call selling ${P.name}, ${P.pitch}. Pricing and offers: ${P.price}. Speak ONLY in ${langName} (Devanagari script for Hindi). Each spoken turn: 1-2 short sentences, no lists, no emojis. Ask discovery questions, answer honestly, handle objections empathetically, steer toward a free trial, demo or purchase. Never invent features.`;
+
+const open=()=>new Promise((r,j)=>{const q=indexedDB.open("ariaCalls",1);q.onupgradeneeded=()=>q.result.createObjectStore("calls",{keyPath:"id"});q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)});
+const dbop=(m,fn)=>open().then(d=>new Promise((r,j)=>{const t=d.transaction("calls",m),q=fn(t.objectStore("calls"));t.oncomplete=()=>r(q&&q.result);t.onerror=()=>j(t.error)}));
+const all=async()=>{try{return(await dbop("readonly",s=>s.getAll())).sort((a,b)=>b.id-a.id)}catch(e){return[]}};
+function save(n,d){const u=URL.createObjectURL(d instanceof Blob?d:new Blob([d]));const a=document.createElement("a");a.href=u;a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+
+// nav
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>go(b.dataset.v));
+function go(v){document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("on",b.dataset.v==v));["Live","Hist","An","Set"].forEach(x=>$("v"+x).classList.toggle("hide",x!=v));if(v=="Hist")rHist();if(v=="An")rAn()}
+$("viewall").onclick=()=>go("Hist");$("q").onchange=()=>{go("Hist")};
+
+// ui helpers
+function setS(s,l,c){$("vLive").dataset.s=s;$("pill").textContent=l;$("pill").style.background=c||"#475174"}
+function add(who,text,interim){const d=el("div","msg "+(who=="bot"?"bot":"me")+(interim?" int":""));const s=el("small");s.append(el("b","",who=="bot"?"AI · Aria":"Customer"),el("span","",fmt(Math.floor((Date.now()-t0)/1000))));d.append(s,el("span","",text));$("chat").appendChild(d);$("chat").scrollTop=1e9;return d}
+function steps(){const b=$("steps");b.innerHTML="";STEPS.forEach((s,i)=>{const d=el("div","st"+(i<stepIdx?" done":i==stepIdx&&active?" now":""));d.append(el("i","",i<stepIdx?"✓":i==stepIdx&&active?"●":""));const t=el("span","",s);if(stepT[i]!=null)t.append(el("small","",fmt(stepT[i])));d.appendChild(t);b.appendChild(d)})}
+steps();
+function insight(j){
+  interest=j.interest;const lv=interest>66?"High":interest>33?"Medium":"Low";
+  $("eng").style.setProperty("--v",interest);$("engv").textContent=interest+"%";$("intl").textContent=lv;$("sent").textContent=j.sentiment;$("sentp").textContent=j.sentiment;$("lq").style.width=interest+"%";$("ec").textContent=interest+"%";
+  $("sentp").style.background=$("sentp").style.color={Positive:"",Neutral:"",Negative:""}[j.sentiment]||"";
+  const i=STEPS.indexOf(j.stage);if(i>stepIdx){stepIdx=i;stepT[i]=Math.floor((Date.now()-t0)/1000)}steps();
+  $("nact").textContent={Discovery:"Ask needs",Pitch:"Explain value",Objection:"Handle concern",Closing:"Send offer"}[j.stage]||"Greet";
+  if(j.tag){notes.unshift(j.tag);notes=notes.slice(0,6);$("kp").innerHTML="";notes.forEach(n=>$("kp").appendChild(el("li","",n)));$("notes").innerHTML="";notes.slice(0,4).forEach(n=>$("notes").appendChild(el("div","",j.stage+": "+n)))}}
+function wave(cv,mode){const g=cv.getContext("2d"),W=cv.width,H=cv.height,N=30,d=new Uint8Array(an?an.frequencyBinCount:0);if(an)an.getByteFrequencyData(d);g.clearRect(0,0,W,H);
+  const col=getComputedStyle(document.documentElement).getPropertyValue(mode=="r"?"--ac":"--ac2").trim()||"#0bd";g.fillStyle=col;
+  const st=$("vLive").dataset.s;for(let i=0;i<N;i++){let h=3;if(st=="listen"&&an&&!muted)h=3+d[i]/255*H*.9;else if(st=="speak")h=5+Math.abs(Math.sin(Date.now()/150+i*.6))*H*.55*Math.abs(Math.sin(i/4+Date.now()/600));g.fillRect(i*(W/N)+2,(H-h)/2,W/N-5,h)}}
+function loop(){wave($("wl"),"l");wave($("wr"),"r");wave($("wrec"),"r");if(active)requestAnimationFrame(loop)}
+
+// speech
+function speak(text){return new Promise(res=>{
+  if(!window.speechSynthesis||!spk)return setTimeout(res,Math.min(2500,text.length*40));
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;
+  const v=speechSynthesis.getVoices().find(v=>v.lang.replace("_","-").startsWith(lang.slice(0,2)));if(v)u.voice=v;
+  speaking=true;setS("speak","AI Speaking","#6d4dff");let f=false;const done=()=>{if(f)return;f=true;clearTimeout(g);speaking=false;res()};u.onend=done;u.onerror=done;
+  const g=setTimeout(done,Math.max(7000,text.length*140));speechSynthesis.speak(u)})}
+async function botTurn(){
+  busy=true;setS("think","Thinking","#d97706");
+  const tr=tx({msgs})||"(call just connected, greet the customer and ask what they do)";let j;
+  try{const r=await sample(SYS()+`\n\nConversation so far:\n${tr}\n\nReply with ONLY JSON, no markdown: {"reply":"Aria's next spoken line in ${langName}","sentiment":"Positive|Neutral|Negative","interest":0-100 (customer buy intent now),"stage":"Discovery|Pitch|Objection|Closing","tag":"short English key point about a customer need, signal or objection, or empty"}`,{cache:false,modelTier:"quick"});
+    j=JSON.parse(r.text.match(/\{[\s\S]*\}/)[0]);if(!j.reply)throw 0}
+  catch(e){const detail=e instanceof Error?e.message:String(e);add("bot","AI connection failed: "+detail);j={reply:langName=="English"?"Sorry, I had a connection issue. Could you repeat that?":"क्षमा करें, कृपया दोहराएँ।",sentiment:"Neutral",interest:interest,stage:STEPS[stepIdx]=="Greeting"?"Discovery":STEPS[stepIdx],tag:""}}
+  j.interest=Math.max(0,Math.min(100,Math.round(+j.interest||0)));if(!STEPS.includes(j.stage))j.stage="Discovery";if(!["Positive","Neutral","Negative"].includes(j.sentiment))j.sentiment="Neutral";
+  if(!active){busy=false;return}
+  msgs.push({role:"bot",text:j.reply,t:Date.now()-t0,interest:j.interest,sentiment:j.sentiment});add("bot",j.reply);$("bub").textContent=j.reply;insight(j);
+  await speak(j.reply);busy=false;listen()}
+function listen(){
+  if(!active||speaking||busy||!SR||muted||held)return;
+  rec=new SR();rec.lang=lang;rec.interimResults=true;rec.continuous=false;setS("listen","Listening","#0ea5c6");
+  rec.onresult=e=>{let fin="",im="";for(const r of e.results)(r.isFinal?(fin+=r[0].transcript):(im+=r[0].transcript));
+    if(im&&!fin){if(!interimEl)interimEl=add("me",im,true);else interimEl.lastChild.textContent=im}
+    if(fin){if(interimEl){interimEl.remove();interimEl=null}handleUser(fin.trim())}};
+  rec.onerror=e=>{if(e.error=="not-allowed"||e.error=="service-not-allowed")micUI(false,"Speech recognition is blocked. Allow the microphone for this page, or type your replies.");else if(e.error=="audio-capture")micUI(false,"No microphone found for speech recognition.")};rec.onend=()=>{if(interimEl){interimEl.remove();interimEl=null}if(active&&!busy&&!speaking)setTimeout(listen,250)};
+  try{rec.start()}catch(e){}}
+function handleUser(t){if(!t||!active||busy||held)return;try{rec&&rec.abort()}catch(e){}
+  if(stepIdx==0){stepIdx=1;stepT[1]=Math.floor((Date.now()-t0)/1000);steps()}
+  msgs.push({role:"user",text:t,t:Date.now()-t0});add("me",t);$("bme").textContent=t;$("bme").classList.remove("hide");botTurn()}
+$("send").onclick=()=>{const v=$("typed").value.trim();if(v){$("typed").value="";handleUser(v)}};$("typed").onkeydown=e=>{if(e.key=="Enter")$("send").click()};
+
+// controls
+$("bMute").onclick=()=>{muted=!muted;$("bMute").classList.toggle("on",muted);stream&&stream.getAudioTracks().forEach(t=>t.enabled=!muted);if(muted){try{rec&&rec.abort()}catch(e){}}else listen()};
+$("bSpk").onclick=()=>{spk=!spk;$("bSpk").classList.toggle("on",spk);if(!spk)speechSynthesis.cancel()};
+$("bHold").onclick=()=>{if(!active)return;held=!held;$("bHold").classList.toggle("on",held);if(held){try{rec&&rec.abort()}catch(e){}speechSynthesis.pause();setS("idle","On hold","#d97706")}else{speechSynthesis.resume();speaking?setS("speak","AI Speaking","#6d4dff"):listen()}};
+$("tTr").onchange=e=>$("chat").classList.toggle("hide",!e.target.checked);$("tSum").onchange=e=>$("sumCard").classList.toggle("hide",!e.target.checked);$("tSug").onchange=e=>$("sugCard").classList.toggle("hide",!e.target.checked);
+$("lang").onchange=()=>{const n=$("lang").value.split("|")[1];$("lchip").textContent="Speaking in "+n;$("tl").textContent=n};
+$("bGo").onclick=()=>active?endCall():startCall();
+$("bStart").onclick=()=>{if(!active)startCall()};$("bEnd").onclick=()=>{if(active)endCall()};const btns=()=>{$("bStart").disabled=active;$("bEnd").disabled=!active};
+
+async function startCall(){
+  if(!$("cons").checked){alert("Please tick the recording consent box to start the call.");return}
+  sample=sample||(async prompt=>{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});const data=await r.json().catch(()=>null);if(!r.ok){const message=data?.error||(r.status===405?"This local host does not run the AI API. Start the app with npm start in its project folder, then open http://localhost:3000. Do not use Live Server.":"AI server returned HTTP "+r.status);throw new Error(message)}if(!data||typeof data.text!=="string")throw new Error("AI server returned an invalid response.");return data});
+  [lang,langName]=$("lang").value.split("|");msgs=[];chunks=[];notes=[];stepIdx=0;stepT=[0];interest=0;muted=held=false;$("chat").innerHTML="";$("result").classList.add("hide");$("recbox").textContent="Recording in progress…";$("bme").classList.add("hide");$("bub").innerHTML="";$("kp").innerHTML="";$("notes").innerHTML="";
+  insight({interest:0,sentiment:"Neutral",stage:"",tag:""});stepIdx=0;steps();
+  try{await getMic();micUI(true,"Microphone is on and listening.");
+    if($("tRec").checked){mr=new MediaRecorder(stream);mr.ondataavailable=e=>e.data.size&&chunks.push(e.data);mr.start(1000);$("recp").textContent="● REC";$("recp").style.background="#ff3b5c"}else mr=null}
+  catch(e){mr=null;add("bot",micMsg(e)+" The call continues without recording; you can type replies.");micUI(false,micMsg(e))}
+  active=true;btns();t0=Date.now();$("bGo").className="d big";$("bGo").innerHTML="<b>📵</b>End Call";$("typed").disabled=$("send").disabled=false;$("lang").disabled=true;
+  tick=setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000);$("timer").textContent=pad(Math.floor(s/3600))+":"+fmt(s%3600)},500);
+  loop();botTurn()}
+
+async function endCall(){
+  active=false;btns();busy=false;clearInterval(tick);try{rec&&rec.abort()}catch(e){}speechSynthesis.cancel();
+  const dur=Math.floor((Date.now()-t0)/1000);setS("think","Summarizing","#d97706");$("bGo").style.pointerEvents="none";
+  let blob=null;if(mr&&mr.state!="inactive")blob=await new Promise(r=>{mr.onstop=()=>r(new Blob(chunks,{type:mr.mimeType||"audio/webm"}));mr.stop()});
+  stream&&stream.getTracks().forEach(t=>t.stop());ac&&ac.close();an=null;stream=null;micUI(false);$("recp").textContent="Saved";$("recp").style.background="";
+  const out=await summarize();const call={id:Date.now(),date:new Date().toISOString(),dur,lang:langName,msgs:[...msgs],audio:blob,...out};
+  try{await dbop("readwrite",s=>s.put(call))}catch(e){}
+  show(call,$("result"),false);if(blob){$("recbox").innerHTML="";const a=el("audio");a.controls=true;a.src=URL.createObjectURL(blob);$("recbox").appendChild(a)}else $("recbox").textContent="No recording for this call.";
+  setS("idle","Call ended");$("bGo").style.pointerEvents="";$("bGo").className="d big start";$("bGo").innerHTML="<b>📞</b>Start Call";$("typed").disabled=$("send").disabled=true;$("lang").disabled=false;miniH()}
+
+async function summarize(){
+  if(!msgs.some(m=>m.role=="user"))return{summary:"The customer did not respond during the call.",requirements:[],objections:[],next:["Retry the call at a different time"],status:"No Response",score:0,sentiment:"Neutral"};
+  try{const r=await sample(`Analyze this sales call transcript (product: ${P.name}). Reply with ONLY JSON, no markdown: {"summary":"2-3 sentence summary written in ${langName}","score":0-100 lead score,"sentiment":"Positive | Neutral | Negative","requirements":["..."],"objections":["..."],"next":["..."],"status":"one of ${STAT.join(" | ")}"}. Write summary, requirements, objections and next in ${langName}; keep status and sentiment in English exactly as listed. Converted = clearly agreed to buy or start a plan; Demo Requested = asked for a demo; Interested = positive, no commitment; Follow-up Required = will think or call back; Not Interested = declined; No Response = no meaningful reply.\n\nTranscript:\n${tx({msgs})}`,{cache:false,modelTier:"quick"});
+    const j=JSON.parse(r.text.match(/\{[\s\S]*\}/)[0]);if(!STAT.includes(j.status))j.status="Follow-up Required";j.score=Math.max(0,Math.min(100,Math.round(+j.score||0)));if(!["Positive","Neutral","Negative"].includes(j.sentiment))j.sentiment="Neutral";return j}
+  catch(e){return{summary:"Automatic summary failed. Please review the transcript.",requirements:[],objections:[],next:["Review the transcript manually"],status:"Follow-up Required",score:50,sentiment:"Neutral"}}}
+
+// render call detail
+const li=a=>{const u=el("ul","pl");(a&&a.length?a:["None noted"]).forEach(x=>u.appendChild(el("li","",x)));return u};
+function show(c,box,hist){
+  box.innerHTML="";box.classList.remove("hide");
+  const top=el("div");top.append(el("span","pill "+cls(c.status),c.status),el("span","mut","  "+new Date(c.date).toLocaleString()+" · "+fmt(c.dur)+" · "+c.lang));box.appendChild(top);
+  box.appendChild(el("div","mut","Lead score "+c.score+"/100 · Sentiment: "+c.sentiment));box.appendChild(el("p","",c.summary));
+  [["Customer requirements",c.requirements],["Objections",c.objections],["Next steps",c.next]].forEach(([t,a])=>{box.appendChild(el("b","",t));box.appendChild(li(a))});
+  if(hist&&c.audio){const a=el("audio");a.controls=true;a.src=URL.createObjectURL(c.audio);box.appendChild(a)}
+  box.appendChild(el("b","","Full conversation, word for word"));const cv=el("div","chat");cv.style.margin="8px 0";
+  c.msgs.forEach(m=>{const d=el("div","msg"+(m.role=="bot"?" bot":""));const s=el("small");s.append(el("b","",m.role=="bot"?"AI · Aria":"Customer"),el("span","",fmt(Math.floor((m.t||0)/1000))));d.append(s,el("span","",m.text));cv.appendChild(d)});box.appendChild(cv);
+  const r=el("div","row");const mk=(t,fn)=>{const b=el("button","btn g",t);b.onclick=fn;r.appendChild(b)};
+  mk("Download transcript",()=>save("call-"+c.id+".txt",tx(c)));if(c.audio)mk("Download recording",()=>save("call-"+c.id+(c.audio.type.includes("mp4")?".mp4":".webm"),c.audio));
+  if(hist)mk("Delete",async()=>{if(confirm("Delete this call?")){await dbop("readwrite",s=>s.delete(c.id));sel=null;rHist()}});box.appendChild(r)}
+async function miniH(){const m=$("mini");m.innerHTML="";const a=(await all()).slice(0,4);if(!a.length){m.appendChild(el("div","mut","No calls yet."));return}
+  a.forEach(c=>{const d=el("div","mini");d.append(el("span","pill "+cls(c.status),c.status),el("span","mut",new Date(c.date).toLocaleString()+" · "+fmt(c.dur)));d.onclick=()=>{sel=c.id;go("Hist")};m.appendChild(d)})}
+miniH();
+const csv=a=>"Date,Duration(s),Language,Status,Score,Sentiment,Summary\n"+a.map(c=>[c.date,c.dur,c.lang,c.status,c.score,c.sentiment,c.summary].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n");
+async function rHist(){
+  const h=$("vHist");h.innerHTML="";const a=await all();if(!a.length){h.appendChild(el("div","card mut","No calls yet. Start a call to see it here."));return}
+  const g=el("div","hgrid"),L=el("div","card"),R=el("div","card");
+  const tb=el("div","row");tb.style.marginTop="0";const f=el("select");["All",...STAT].forEach(s=>f.appendChild(el("option","",s)));f.value=fS;f.onchange=()=>{fS=f.value;rHist()};
+  const ex=el("button","btn g","Export CSV");ex.onclick=()=>save("calls.csv",csv(a));tb.append(f,ex);L.appendChild(tb);
+  const k=$("q").value.toLowerCase();const vis=a.filter(c=>(fS=="All"||c.status==fS)&&(!k||(c.summary+tx(c)).toLowerCase().includes(k)));
+  if(!sel||!vis.find(c=>c.id==sel))sel=vis[0]&&vis[0].id;const list=el("div","list");
+  vis.forEach(c=>{const i=el("div","item"+(c.id==sel?" on":""));const t=el("div");t.append(el("span","pill "+cls(c.status),c.status),el("span","mut","  "+new Date(c.date).toLocaleString()+" · score "+c.score));i.append(t,el("p","",c.summary));i.onclick=()=>{sel=c.id;rHist()};list.appendChild(i)});
+  L.appendChild(list);const cur=vis.find(c=>c.id==sel);if(cur)show(cur,R,true);else R.textContent="No matching calls.";g.append(L,R);h.appendChild(g)}
+async function rAn(){
+  const h=$("vAn");h.innerHTML="";const a=await all();if(!a.length){h.appendChild(el("div","card mut","No data yet. Make a call first."));return}
+  const conv=a.filter(c=>c.status=="Converted").length,avg=Math.round(a.reduce((x,c)=>x+c.score,0)/a.length),tot=a.reduce((x,c)=>x+c.dur,0);
+  const st=el("div","stats");[["Total calls",a.length],["Converted",conv],["Avg lead score",avg],["Talk time",Math.round(tot/60)+" min"]].forEach(([k,v])=>{const d=el("div","card");d.append(el("b","",v),el("span","mut",k));st.appendChild(d)});h.appendChild(st);
+  const c=el("div","card");c.appendChild(el("h3","","Pipeline by status"));const bar=el("div","dist");
+  STAT.forEach(s=>{const n=a.filter(x=>x.status==s).length;if(n){const i=el("i","pill "+cls(s));i.style.cssText="flex:"+n+";border-radius:0;padding:0";i.title=s+": "+n;bar.appendChild(i)}});c.appendChild(bar);
+  const lg=el("div","row");STAT.forEach(s=>lg.appendChild(el("span","pill "+cls(s),s+" "+a.filter(x=>x.status==s).length)));c.appendChild(lg);h.appendChild(c)}
+const micMsg=e=>({NotAllowedError:"Microphone access was blocked. Click the lock icon in the address bar, allow the microphone, then press Enable Microphone again. If it still fails, open the page in a full browser tab instead of an embedded preview.",NotFoundError:"No microphone was found on this device.",NotReadableError:"The microphone is being used by another app."}[e&&e.name]||"The microphone could not be started. Check your browser permissions.");
+function micUI(on,msg){$("bMic").textContent=on?"🎤 Microphone On":"🎤 Enable Microphone";$("bMic").classList.toggle("g",on);$("micst").textContent=msg||(on?"Microphone is active. Speak to see the level move.":"Microphone is off.");if(!on)$("micl").style.width="0"}
+function micLoop(){if(!an)return;const d=new Uint8Array(an.frequencyBinCount);an.getByteFrequencyData(d);let m=0;for(const v of d)m+=v;$("micl").style.width=Math.min(100,m/d.length*1.6)+"%";requestAnimationFrame(micLoop)}
+async function getMic(){if(stream&&stream.active&&an)return;stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});ac=new (window.AudioContext||window.webkitAudioContext)();an=ac.createAnalyser();an.fftSize=128;ac.createMediaStreamSource(stream).connect(an);micLoop()}
+$("bMic").onclick=async()=>{if(stream&&stream.active&&!active){stream.getTracks().forEach(t=>t.stop());ac&&ac.close();an=null;stream=null;micUI(false);return}try{await getMic();micUI(true)}catch(e){micUI(false,micMsg(e))}};
+try{navigator.permissions.query({name:"microphone"}).then(p=>{if(p.state=="granted")$("micst").textContent="Microphone permission already granted. Click Enable Microphone.";else if(p.state=="denied")$("micst").textContent=micMsg({name:"NotAllowedError"})})}catch(e){}
+speechSynthesis&&speechSynthesis.getVoices();
+</script></body></html>
